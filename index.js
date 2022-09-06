@@ -116,6 +116,15 @@ async function run() {
             res.send(result);
         });
 
+        //  get user reviews  
+        app.get('/userReview', async (req, res) => {
+            const query = {};
+            const cursor = userReviewCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
+
+
         // get user added items  
 
         // app.get('/userAddedItems', async (req, res) => {
