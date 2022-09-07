@@ -4,7 +4,7 @@ const port = process.env.PORT || 5000;
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-
+var jwt = require('jsonwebtoken');
 
 // app.use(cors({ origin: "https://famous-footwear-warehouse.web.app" }))
 app.use(cors())
@@ -25,6 +25,9 @@ async function run() {
         const ProductsCollection = client.db('lafz-cosmetic-database').collection('products');
         const userOrderCollection = client.db('lafz-cosmetic-database').collection('userOrders');
         const userReviewCollection = client.db('lafz-cosmetic-database').collection('userReviews');
+        const userDetailCollection = client.db('lafz-cosmetic-database').collection('userCollection');
+        const userEmailCollection = client.db('lafz-cosmetic-database').collection('userEmail');
+
 
 
 
@@ -60,6 +63,28 @@ async function run() {
         });
 
 
+        // restock Quantity by  getting user order
+        app.put("/allProducts/:id", async (req, res) => {
+            const data = req.body;
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    name: data.name,
+                    description: data.description,
+                    minOrder: data.minOrder,
+                    price: data.price,
+                    available: data.available,
+                    imgUrl: data.imgUrl,
+                },
+            };
+            // console.log(updateDoc);
+            const options = { upsert: true };
+            const result = await ProductsCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+
         //user starts
         //add user orders 
         app.post('/userOrder', async (req, res) => {
@@ -84,31 +109,6 @@ async function run() {
             res.send(result);
         });
 
-        //user end
-
-
-        // restock Quantity by  getting user order
-        app.put("/allProducts/:id", async (req, res) => {
-            const data = req.body;
-            const id = req.params.id;
-            const filter = { _id: ObjectId(id) };
-            const updateDoc = {
-                $set: {
-                    name: data.name,
-                    description: data.description,
-                    minOrder: data.minOrder,
-                    price: data.price,
-                    available: data.available,
-                    imgUrl: data.imgUrl,
-                },
-            };
-            // console.log(updateDoc);
-            const options = { upsert: true };
-            const result = await ProductsCollection.updateOne(filter, updateDoc, options);
-            res.send(result);
-        });
-
-
         // post user reviews  
         app.post('/userReview', async (req, res) => {
             const userOrder = req.body;
@@ -124,6 +124,44 @@ async function run() {
             res.send(reviews);
         });
 
+
+        //  post user details 
+        app.post('/userCollection', async (req, res) => {
+            const userOrder = req.body;
+            const result = await userDetailCollection.insertOne(userOrder);
+            res.send(result);
+        });
+        // get user details
+        app.get('/userCollection', async (req, res) => {
+            const query = {};
+            const cursor = userDetailCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
+
+        //user end
+
+        // get user by email  
+        // app.get('/userCollection/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const filter = { email: email };
+        //     const result = await userCollection.findOne(filter);
+        //     res.send(result);
+        // });
+
+        // user data put api
+        app.put('/userEmailCollection/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = req.body;
+            const filter = { email: email };
+            const updateDoc = {
+                $set: user,
+            };
+            const options = { upsert: true };
+            const result = await userEmailCollection.updateOne(filter, updateDoc, options);
+            var token = jwt.sign({ email: email }, process.env.SECRET_ACCESS_TOKEN);
+            res.send({ result, token });
+        })
 
         // get user added items  
 
