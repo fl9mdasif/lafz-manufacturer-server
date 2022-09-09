@@ -110,7 +110,7 @@ async function run() {
         });
 
         //get user orders
-        app.get('/userOrder', async (req, res) => {
+        app.get('/userOrder', verifyJWT, async (req, res) => {
             const order = req.query.order;
             const query = { order: order };
             const orders = await userOrderCollection.find(query).toArray();
@@ -166,7 +166,7 @@ async function run() {
         //     res.send(result);
         // });
 
-        // user data put api
+        // user mail data put api
         app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
             const user = req.body;
@@ -180,6 +180,7 @@ async function run() {
             res.send({ result, token });
         })
 
+        // make a user to role admin 
         app.put('/user/admin/:email', async (req, res) => {
             const email = req.params.email;
             const filter = { email: email };
