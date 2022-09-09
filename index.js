@@ -110,7 +110,7 @@ async function run() {
         });
 
         //get user orders
-        app.get('/userOrder', verifyJWT, async (req, res) => {
+        app.get('/userOrder', async (req, res) => {
             const order = req.query.order;
             const query = { order: order };
             const orders = await userOrderCollection.find(query).toArray();
