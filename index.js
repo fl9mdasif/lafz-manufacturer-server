@@ -6,7 +6,7 @@ require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 var jwt = require('jsonwebtoken');
 
-// app.use(cors({ origin: "https://famous-footwear-warehouse.web.app" }))
+app.use(cors({ origin: "https://lafz-manufacturer.web.app/" }))
 app.use(cors())
 app.use(express.json())
 
