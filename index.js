@@ -162,7 +162,7 @@ async function run() {
 
         // start admin create    
         // user mail data put api
-        app.put('/user/:email', async (req, res) => {
+        app.put('/user/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
             const user = req.body;
             const filter = { email: email };
@@ -203,7 +203,7 @@ async function run() {
         });
 
         // find admin from users
-        app.get('/admin/:email', async (req, res) => {
+        app.get('/admin/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
             const user = await userEmailCollection.findOne({ email: email });
             const isAdmin = user.role === 'admin';
