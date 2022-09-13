@@ -201,7 +201,6 @@ async function run() {
 
 
         // get all user added items  
-
         app.get('/users', verifyJWT, async (req, res) => {
             const query = {};
             const cursor = userEmailCollection.find(query);
@@ -216,41 +215,6 @@ async function run() {
             const result = await userEmailCollection.deleteOne(query);
             res.send(result);
         });
-        //delete a shoe by user
-
-        // app.delete('/userAddedItems/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const result = await userAddedCollection.deleteOne(query);
-        //     res.send(result);
-        // });
-
-
-
-        // delivery btn decrease quantity by one   
-
-        // app.put("/allShoes/:id", async (req, res) => {
-        //     const data = req.body;
-        //     const id = req.params.id;
-        //     const filter = { _id: ObjectId(id) };
-        //     const updateDoc = {
-        //         $set: {
-        //             name: data.name,
-        //             description: data.description,
-        //             brand: data.brand,
-        //             gender: data.gender,
-        //             originalPrice: data.originalPrice,
-        //             discountPrice: data.discountPrice,
-        //             available: data.available,
-        //             imgUrl: data.imgUrl,
-        //             discountRoundPrice: data.discountRoundPrice,
-        //         },
-        //     };
-        //     // console.log(updateDoc)
-        //     const options = { upsert: true };
-        //     const result = await shoesCollection.updateOne(filter, updateDoc, options);
-        //     res.send(result);
-        // });
 
 
         // //blog
@@ -260,7 +224,6 @@ async function run() {
         //     const blog = await cursor.toArray();
         //     res.send(blog);
 
-
         // });
         // // get single blog details 
         // app.get('/blogs/:id', async (req, res) => {
@@ -269,7 +232,6 @@ async function run() {
         //     const singleProduct = await blogCollection.findOne(query);
         //     res.send(singleProduct);
         // });
-
 
         // // update blog viewers
         // app.put("/blogs/:id", async (req, res) => {
