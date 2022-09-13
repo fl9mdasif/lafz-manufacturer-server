@@ -212,7 +212,7 @@ async function run() {
         // delete a user  
         app.delete('/users/:email', async (req, res) => {
             const email = req.params.email;
-            const result = await userOrderCollection.deleteOne(email);
+            const result = await userEmailCollection.deleteOne(email);
             res.send(result);
         });
         //delete a shoe by user
