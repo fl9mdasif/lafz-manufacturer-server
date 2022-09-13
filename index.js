@@ -181,16 +181,22 @@ async function run() {
         })
 
         // make a user to role admin 
-        app.put('/user/admin/:email', async (req, res) => {
+        app.put('/user/admin/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
-            const filter = { email: email };
-            const updateDoc = {
-                $set: { role: 'admin' },
-            };
+            const requester = req.decoded.email;
+            const requesterAccount = await userEmailCollection.findOne({ email: requester })
+            if (requesterAccount.role === 'admin') {
+                const filter = { email: email };
+                const updateDoc = {
+                    $set: { role: 'admin' },
+                };
+                const result = await userEmailCollection.updateOne(filter, updateDoc);
+                res.send(result);
+            }
+            else {
+                res.status(403).send({ message: "forbidden" })
+            }
 
-            const result = await userEmailCollection.updateOne(filter, updateDoc);
-
-            res.send(result);
         })
 
 
@@ -203,8 +209,12 @@ async function run() {
             res.send(users);
         });
 
-
-
+        // delete a user  
+        app.delete('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const result = await userOrderCollection.deleteOne(email);
+            res.send(result);
+        });
         //delete a shoe by user
 
         // app.delete('/userAddedItems/:id', async (req, res) => {
