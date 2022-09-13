@@ -158,14 +158,9 @@ async function run() {
 
         //user end
 
-        // get user by email  
-        // app.get('/userCollection/:email', async (req, res) => {
-        //     const email = req.params.email;
-        //     const filter = { email: email };
-        //     const result = await userCollection.findOne(filter);
-        //     res.send(result);
-        // });
 
+
+        // start admin create    
         // user mail data put api
         app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
@@ -196,7 +191,6 @@ async function run() {
             else {
                 res.status(403).send({ message: "forbidden" })
             }
-
         })
 
 
@@ -207,6 +201,14 @@ async function run() {
             const users = await cursor.toArray();
             res.send(users);
         });
+
+        // find admin from users
+        app.get('/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = await userEmailCollection.findOne({ email: email });
+            const isAdmin = user.role === 'admin';
+            req.send({ admin: isAdmin })
+        })
 
         // delete a user  
         app.delete('/users/:id', async (req, res) => {
@@ -253,9 +255,6 @@ async function run() {
         //     const result = await blogCollection.updateOne(filter, updateDoc, options);
         //     res.send(result);
         // });
-
-
-
 
     }
     finally {
