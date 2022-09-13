@@ -207,7 +207,7 @@ async function run() {
             const email = req.params.email;
             const user = await userEmailCollection.findOne({ email: email });
             const isAdmin = user.role === 'admin';
-            req.send({ admin: isAdmin })
+            res.send({ admin: isAdmin })
         })
 
         // delete a user  
