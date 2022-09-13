@@ -111,8 +111,8 @@ async function run() {
 
         //get user orders
         app.get('/userOrder', async (req, res) => {
-            const order = req.query.order;
-            const query = { order: order };
+            // const order = req.query.order;
+            const query = {};
             const orders = await userOrderCollection.find(query).toArray();
             res.send(orders);
         });
